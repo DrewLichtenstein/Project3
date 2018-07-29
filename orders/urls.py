@@ -14,5 +14,7 @@ urlpatterns = [
     path("add_pasta_order", views.add_pasta_order, name="add_pasta_order"),
     path("confirmed_orders", views.confirmed_orders, name="confirmed_orders"),
     path("confirm_final_order", views.confirm_final_order, name="confirm_final_order"),
+    path("special_pizza", views.special_pizza, name="special_pizza"),
+    path("login_redirect",views.login_redirect,name="login_redirect"),
     path("", views.index, name="index")
 ]

@@ -1,11 +1,21 @@
 {% extends "base.html" %}
 
 {% block body %}
-<h2>Your Final Order</h2>
+<h2>Your Order(s)</h2>
 
-{% for order in your_order %}
-<li>{{order.order_item}} -- ${{order.price}}</li>
+{% for order in your_confirmed_order %}
+{% if order.finished == False %}
+<li>Order: {{order.final_order}} -- ${{order.total}} <b>Processing!</b></li>
+{% endif %}
 {% endfor %}
 <br>
-<p><b>Total:</b> {{total}}</p>
+
+
+{% for order in your_confirmed_order %}
+{% if order.finished == True %}
+<li>Order: {{order.final_order}} -- ${{order.total}} <b>Done!</b></li>
+{% endif %}
+{% endfor %}
+<br>
+
 {% endblock %}
