@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block body %}
+<h2>Confirmed Orders</h2>
+
+{% for order in all_confirmed_orders %}
+{% if order.finished == False %}
+<li>{{order.order_name}}: {{order.final_order}} -- ${{order.total}}</li>
+<form action="{% url 'confirm_final_order' %}" method="post" >
+    {% csrf_token %}
+    <button name="final_order_id" value={{order.id}}>Finalize Order</button>
+</form>
+{% endif %}
+{% endfor %}
+<br>
+{% endblock %}

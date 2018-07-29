@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from . models import Pizza_Topping, Pizza_Size, Pizza_Type, Sub_Size, Sub_Add_On, Dinner_Platter_Size, Sub, Pizza, Pasta, Salad, Platter, Order, Confirmed_Order
+from . models import Pizza_Topping, Pizza_Size, Pizza_Type, Dinner_Platter_Size, Pasta, Salad, Platter, Order, Confirmed_Order, Sub_Sandwich
 
 # Create your views here.
 def index(request):
@@ -43,15 +43,17 @@ def logout_view(request):
     return render(request, "login.html", {"message": "Logged out."})
 
 def menu(request):
+    if not request.user.is_authenticated:
+        return render(request, "login.html", {"message": None})
+    context = {
+        "user": request.user
+    }
     context = {
         "toppings": Pizza_Topping.objects.all(),
         "sizes": Pizza_Size.objects.all(),
         "types": Pizza_Type.objects.all(),
         "your_orders": Order.objects.filter(order_name=request.user).all(),
-        "sub": Sub.objects.all(),
         "salads": Salad.objects.all(),
-        "sub_add_on": Sub_Add_On.objects.all(),
-        "sub_size": Sub_Size.objects.all(),
         "platters": Platter.objects.all(),
         "pastas": Pasta.objects.all()
 
@@ -81,8 +83,6 @@ def add_pasta_order (request):
     f = Order(order_name=order_name,order_item=order_item,price=price)
     f.save()
     return HttpResponseRedirect(reverse("menu"))
-
-
 
 def add_pizza_order (request):
     order_name = request.user
@@ -130,6 +130,26 @@ def checkout(request):
         "total": total
     }
     return render(request, "checkout.html", context)
+
+def confirmed_orders(request):
+    if not request.user.is_staff:
+        return render(request, "login.html", {"message": "Log-in as staff to see Confirmed Orders."})
+    context = {
+        "user": request.user
+    }
+    context = {
+    "all_confirmed_orders": Confirmed_Order.objects.all()
+    }
+    return render(request, "confirmed_orders.html", context)
+
+def confirm_final_order(request):
+    final_order_id = request.POST["final_order_id"]
+    set_order_to_confirm = Confirmed_Order.objects.get(pk=final_order_id)
+    set_order_to_confirm.finished = True
+    set_order_to_confirm.save()
+    print(set_order_to_confirm)
+    return HttpResponseRedirect(reverse("confirmed_orders"))
+
 
 
 
