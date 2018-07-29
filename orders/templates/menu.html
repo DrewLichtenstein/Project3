@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block body %}
+<a href="{% url 'logout' %}">Logout</a>
+<h1>Place an order!</h1>
+<h2>Pizza</h2>
+<form action="{% url 'add_pizza_order' %}" method="post" >
+    {% csrf_token %}
+    <select name="size">
+    {% for size in sizes %}
+    <option value="{{size.name}}">{{size.name}}</option>
+        {% endfor %}
+    </select>
+    <select name="type">
+    {% for type in types %}
+    <option value="{{type.name}}">{{type.name}}</option>
+        {% endfor %}
+    </select>
+    <select multiple name="toppings">
+    {% for topping in toppings %}
+    <option value="{{topping.name}}">{{topping.name}}</option>
+        {% endfor %}
+    </select>
+    <input type="submit" value="Add to order" />
+    </form>
+
+    <h2>Salad</h2>
+        <form action="{% url 'add_salad_order' %}" method="post" >
+            {% csrf_token %}
+            <select name ="salad">
+            {% for salad in salads %}
+            <option value="{{salad.name}}">{{salad.name}}</option>
+            {% endfor %}
+        </select>
+        <input type="submit" value="Add to order" />
+    </form>
+
+    <h2>Platter</h2>
+        <form action="{% url 'add_platter_order' %}" method="post" >
+            {% csrf_token %}
+            <select name ="platter">
+            {% for platter in platters %}
+            <option value="{{platter.name}}">{{platter.name}}</option>
+            {% endfor %}
+        </select>
+        <input type="submit" value="Add to order" />
+    </form>
+
+    <h2>Pasta</h2>
+        <form action="{% url 'add_pasta_order' %}" method="post" >
+            {% csrf_token %}
+            <select name ="pasta">
+            {% for pasta in pastas %}
+            <option value="{{pasta.name}}">{{pasta.name}}</option>
+            {% endfor %}
+        </select>
+        <input type="submit" value="Add to order" />
+    </form>
+
+<h2>Your Order</h2>
+
+{% for order in your_orders %}
+<li>{{order.order_item}} -- ${{order.price}}</li>
+{% endfor %}
+<form action="{% url 'checkout' %}">
+<input type="submit" value="Finalize your order?">
+</form>
+
+{% endblock %}

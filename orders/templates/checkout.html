@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block body %}
+<h2>Your Final Order</h2>
+
+{% for order in your_order %}
+<li>{{order.order_item}} -- ${{order.price}}</li>
+{% endfor %}
+<br>
+<p><b>Total:</b> {{total}}</p>
+{% endblock %}
